@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import UserTable from './tables/UserTable'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const App = () => {
+  const usersData = [
+    { id: 1, name: 'Doyoque', username: 'floppyDisk' },
+    { id: 2, name: 'Tania', username: 'hardDisk' },
+    { id: 3, name: 'Gerard', username: 'flashDisk' }
+  ];
+
+  // const initialForm = { id: null, name: '', username: '' }
+
+  //set state
+  const [users] = useState(usersData)
+
+  var dom = 
+    <div className="container">
+      <h1>CRUD App with Hooks</h1>
+      <div className="flex-row">
+        <div className="flex-large">
+          <h2>Add user</h2>
+        </div>
+        <div className="flex-large">
+          <h2>View users</h2>
+          <UserTable users={users} />
+        </div>
+      </div>
     </div>
+  return (
+    dom
   );
 }
 
