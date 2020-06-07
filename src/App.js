@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import './App.css';
 import UserTable from './tables/UserTable';
 import AddUserForm from './forms/AddUserForm';
+import EditUserForm from './forms/EditUserForm';
 
 const App = () => {
   const usersData = [
@@ -10,10 +11,12 @@ const App = () => {
     { id: 3, name: 'Gerard', username: 'flashDisk' }
   ]
 
-  // const initialForm = { id: null, name: '', username: '' }
+  const initialForm = { id: null, name: '', username: '' }
 
   //set state
   const [users, setUser] = useState(usersData)
+  const [editing, setEditing] = useState(false)
+  const [currentUser, setCurrentUser] = useState(initialForm)
 
   //CRUD operation
   const addUser = user => {
@@ -21,17 +24,43 @@ const App = () => {
     setUser([ ...users, user ])
   }
 
+  const deleteUser = id => {
+    setEditing(false)
+    setUser(users.filter( user => user.id !== id ))
+  }
+
+  const editRow = user => {
+    setEditing(true)
+    setCurrentUser({ id: user.id, name: user.name, username: user.username })
+  }
+
+  const updateUser = (id, updatedUser) => {
+    setEditing(false) 
+    setUser(users.map(user => (user.id === id ? updatedUser : user)))
+  }
+
   var dom = 
     <div className="container">
       <h1>CRUD App with Hooks</h1>
       <div className="flex-row">
         <div className="flex-large">
-          <h2>Add user</h2>
-          <AddUserForm addUser={addUser} />
+        {editing ? (<Fragment>
+                      <h2>Edit User</h2>
+                      <EditUserForm editing={editing}
+                                    setEditing={setEditing}
+                                    currentUser={currentUser}
+                                    updateUser={updateUser}
+                      />
+                    </Fragment>) : (
+                    <Fragment>
+                      <h2>Add user</h2>
+                      <AddUserForm addUser={addUser} />
+                    </Fragment>
+                    )}
         </div>
         <div className="flex-large">
           <h2>View users</h2>
-          <UserTable users={users} />
+          <UserTable users={users} deleteUser={deleteUser} editRow={editRow} />
         </div>
       </div>
     </div>
